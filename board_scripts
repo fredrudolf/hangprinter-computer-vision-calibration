@@ -1,0 +1,10 @@
+# Create board
+bin/create_board_charuco -w=5 -h=7 -sl=240 -ml=160 -d=0 charuco_board.jpg
+
+# Make markers
+./bin/create_marker -d=0 --id=0 aruco0.jpg
+./bin/create_marker -d=0 --id=1 aruco1.jpg
+./bin/create_marker -d=0 --id=2 aruco2.jpg
+./bin/create_marker -d=0 --id=3 aruco3.jpg
+./bin/create_marker -d=0 --id=4 aruco4.jpg
+./bin/create_marker -d=0 --id=5 aruco5.jpg
