@@ -14,7 +14,7 @@ def capture(filename, res):
     cmd = "raspistill -w {} -h {} -o {}".format(*res.value, filename)
     os.system(cmd)
 
-def view(filename, res):
+def view(filename):
     "Read and view image"
     img = cv2.imread(filename, cv2.IMREAD_COLOR)
     cv2.imshow('window', img)
@@ -22,15 +22,13 @@ def view(filename, res):
     return cv2.waitKey(0)
 
 def main():
-
     cv2.namedWindow('window', cv2.WINDOW_NORMAL)
-    cv2.resizeWindow('window', (1280,960))
-    
+    cv2.resizeWindow('window', (1280, 960))
     i = 0
     while True:
         # Capture preview
         capture('temp.jpg', Res.LOW)
-        key = view('temp.jpg', Res.LOW)
+        key = view('temp.jpg')
         # Kill program
         if key == ord("q"):
             break
@@ -47,4 +45,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
