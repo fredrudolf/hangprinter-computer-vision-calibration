@@ -26,6 +26,6 @@ def avg_normal_from_rotationvectors(df):
     avg_normal = avg_normal/np.linalg.norm(avg_normal)
     # Variance on x, y and z
     normals[['nx', 'ny']].plot.density()
-    var_xyz = np.std(normals, ddof=1).values
+    var_xyz = np.var(normals, ddof=1).values
 
     return avg_normal, var_xyz
