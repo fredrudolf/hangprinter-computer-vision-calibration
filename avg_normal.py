@@ -20,12 +20,10 @@ def avg_normal_from_rotationvectors(df):
     """ Given a dataframe of rotation vectors, return its average normal"""
     # Compute normals for each rotation vector
     normals = normals_from_rotationvectors(df)
-    print(np.var(normals.values, ddof=1))
     # Return average normal
-    avg_normal = np.mean(normals.values, axis=0)
+    avg_normal = np.sum(normals.values, axis=0)
     avg_normal = avg_normal/np.linalg.norm(avg_normal)
     # Variance on x, y and z
-    normals[['nx', 'ny']].plot.density()
     var_xyz = np.var(normals, ddof=1).values
 
     return avg_normal, var_xyz
