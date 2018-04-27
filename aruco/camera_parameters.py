@@ -9,10 +9,21 @@ class CameraParameters:
         assert isinstance(width, int) and isinstance(height, int)
         assert isinstance(use_fisheye, bool)
 
-        self.cam_mat = cam_mat
-        self.dist_coeffs = dist_coeffs
+        self.cam_mat = cam_mat.copy()
+        self.dist_coeffs = dist_coeffs.copy()
         self.size = height, width
         self.use_fisheye = use_fisheye
+
+        if use_fisheye:
+            new_cam_mat = cv2.fisheye.estimateNewCameraMatrixForUndistortRectify(
+                cam_mat, dist_coeffs, self.size, np.eye(3), balance=1.0
+            )
+            self.map1, self.map2 = cv2.fisheye.initUndistortRectifyMap(
+                cam_mat, dist_coeffs, np.eye(3),
+                new_cam_mat, self.size, cv2.CV_16SC2
+            )
+            self.new_cam_mat = new_cam_mat
+            self.new_dist_coeffs = np.zeros((4, 1))
 
 
 def read_camera_parameters(filename):

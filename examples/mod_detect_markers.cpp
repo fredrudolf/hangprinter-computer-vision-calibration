@@ -161,7 +161,7 @@ int main(int argc, char *argv[])
    }
 
    // Remap fisheye
-   fisheye::estimateNewCameraMatrixForUndistortRectify(camMat, distCoeffs, imgSize, Matx33d::eye(), camMatRemap, 1);
+   fisheye::estimateNewCameraMatrixForUndistortRectify(camMat, distCoeffs, imgSize, Matx33d::eye(), camMatRemap, 1, imgSize, 1);
    fisheye::initUndistortRectifyMap(camMat, distCoeffs, Matx33d::eye(), camMatRemap, imgSize, CV_16SC2, map1, map2);
 
    namedWindow("Frame", WINDOW_NORMAL);
@@ -187,18 +187,24 @@ int main(int argc, char *argv[])
          return 0;
       }
       // Remap from fishey
-      remap(img, imgRemap, map1, map2, INTER_LINEAR, BORDER_CONSTANT);
-
+      remap(img, imgRemap, map1, map2, INTER_CUBIC, BORDER_CONSTANT);
+      
       // detect markers and estimate pose
       aruco::detectMarkers(imgRemap, dictionary, corners, ids, detectParams, rejected);
       if (ids.size() > 0)
       {
-         aruco::estimatePoseSingleMarkers(corners, markerLength, camMat, distCoeffs, rvecs, tvecs);
+         camMat.at<double>(0,0) /= 2;
+         camMat.at<double>(1,1) /= 2;
+         Mat zeroCoeffs = Mat::zeros(1,4, CV_64F);
+
+
+         aruco::estimatePoseSingleMarkers(corners, markerLength, camMatRemap, zeroCoeffs, rvecs, tvecs);
          aruco::drawDetectedMarkers(imgRemap, corners, ids);
          for (unsigned int i = 0; i < ids.size(); i++)
          {
-            aruco::drawAxis(imgRemap, camMat, distCoeffs, rvecs[i], tvecs[i], markerLength * 0.5f);
+            aruco::drawAxis(imgRemap, camMatRemap, zeroCoeffs, rvecs[i], tvecs[i], markerLength * 0.5f);
             // Find id0
+            
             cout << ids[i] << ","
                  << tvecs[i][0] << ","
                  << tvecs[i][1] << ","
